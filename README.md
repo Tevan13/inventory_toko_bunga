@@ -14,6 +14,7 @@ git clone https://github.com/Tevan13/inventory_toko_bunga.git
 terdapat package controller,model,dan view:
 - user
 - produk
+- pemesanan
 - laporan
 - login
 
