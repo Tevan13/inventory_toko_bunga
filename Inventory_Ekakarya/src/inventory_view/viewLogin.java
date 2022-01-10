@@ -5,18 +5,41 @@
  */
 package inventory_view;
 
+import inventory_controller.controllerLogin;
+import javax.swing.JButton;
+import javax.swing.JTextField;
+
 /**
  *
  * @author Windows 10
  */
 public class viewLogin extends javax.swing.JFrame {
+    private controllerLogin cL;
 
     /**
      * Creates new form viewLogin
      */
     public viewLogin() {
+        cL = controllerLogin.getInstance(this);
         initComponents();
     }
+
+    public JButton getBatal() {
+        return batal_BT1;
+    }
+
+    public JButton getLogi() {
+        return login_BT2;
+    }
+
+    public JTextField getPassword() {
+        return password_TF2;
+    }
+
+    public JTextField getUsername() {
+        return username_TF1;
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -30,11 +53,11 @@ public class viewLogin extends javax.swing.JFrame {
         jSlider1 = new javax.swing.JSlider();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        username_TF1 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        buttonBatal = new javax.swing.JButton();
-        buttonSimpan = new javax.swing.JButton();
+        password_TF2 = new javax.swing.JTextField();
+        batal_BT1 = new javax.swing.JButton();
+        login_BT2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -44,23 +67,23 @@ public class viewLogin extends javax.swing.JFrame {
 
         jLabel2.setText("Password");
 
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+        password_TF2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
+                password_TF2ActionPerformed(evt);
             }
         });
 
-        buttonBatal.setText("BATAL");
-        buttonBatal.addActionListener(new java.awt.event.ActionListener() {
+        batal_BT1.setText("BATAL");
+        batal_BT1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonBatalActionPerformed(evt);
+                batal_BT1ActionPerformed(evt);
             }
         });
 
-        buttonSimpan.setText("MASUK");
-        buttonSimpan.addActionListener(new java.awt.event.ActionListener() {
+        login_BT2.setText("MASUK");
+        login_BT2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonSimpanActionPerformed(evt);
+                login_BT2ActionPerformed(evt);
             }
         });
 
@@ -72,9 +95,9 @@ public class viewLogin extends javax.swing.JFrame {
                 .addContainerGap(43, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(buttonBatal)
+                        .addComponent(batal_BT1)
                         .addGap(18, 18, 18)
-                        .addComponent(buttonSimpan)
+                        .addComponent(login_BT2)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -82,8 +105,8 @@ public class viewLogin extends javax.swing.JFrame {
                             .addComponent(jLabel2))
                         .addGap(26, 26, 26)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(password_TF2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(username_TF1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(27, 27, 27))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -91,16 +114,16 @@ public class viewLogin extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(username_TF1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(password_TF2, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonSimpan)
-                    .addComponent(buttonBatal))
+                    .addComponent(login_BT2)
+                    .addComponent(batal_BT1))
                 .addContainerGap())
         );
 
@@ -124,17 +147,19 @@ public class viewLogin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+    private void password_TF2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_password_TF2ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
+    }//GEN-LAST:event_password_TF2ActionPerformed
 
-    private void buttonBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBatalActionPerformed
+    private void batal_BT1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_batal_BT1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_buttonBatalActionPerformed
+        cL.clear();
+    }//GEN-LAST:event_batal_BT1ActionPerformed
 
-    private void buttonSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSimpanActionPerformed
+    private void login_BT2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login_BT2ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_buttonSimpanActionPerformed
+        cL.Login();
+    }//GEN-LAST:event_login_BT2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -175,13 +200,13 @@ public class viewLogin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton buttonBatal;
-    private javax.swing.JButton buttonSimpan;
+    private javax.swing.JButton batal_BT1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSlider jSlider1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JButton login_BT2;
+    private javax.swing.JTextField password_TF2;
+    private javax.swing.JTextField username_TF1;
     // End of variables declaration//GEN-END:variables
 }

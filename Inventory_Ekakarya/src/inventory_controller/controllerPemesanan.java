@@ -13,24 +13,25 @@ import inventory_view.viewPemesanan;
  * @author ertit
  */
 public class controllerPemesanan {
-    private modelPemesanan mP;
-    private viewPemesanan vP;
+    private modelPemesanan mPP;
+    private viewPemesanan vPP;
     
-public controllerPemesanan (viewPemesanan vP){
-        this.vP = vP;
+public controllerPemesanan (viewPemesanan vPP){
+        this.vPP = vPP;
     }
     
     public void SimpanTransaksi(){
-        mP = new modelPemesanan();
-        mP.setNamaProduk((String) vP.getNamaProduk_CB1().getSelectedItem());
-        mP.setHargaSatuan(vP.getHargaSatuan_TF3().getText());
-        mP.setBayar(vP.getBayar_TF5().getText());
-        mP.setKategori(vP.getKategori_TF2().getText());
-        mP.setJumlahBeli(vP.getJumlahBeli_TF4().getText());
-        mP.setKembalian(vP.getKembalian_TF6().getText());
+        mPP = new modelPemesanan();
+        mPP.setNamaProduk((String) vPP.getNamaProduk_CB1().getSelectedItem());
+        mPP.setHargaSatuan(vPP.getHargaSatuan_TF3().getText());
+        mPP.setNamaPelanggan(vPP.getNamaPelanggan_TF7().getText());
+        mPP.setBayar(vPP.getBayar_TF5().getText());
+        mPP.setKategori(vPP.getKategori_TF2().getText());
+        mPP.setJumlahBeli(vPP.getJumlahBeli_TF4().getText());
+        mPP.setKembalian(vPP.getKembalian_TF6().getText());
         
         
-        mP.simpantransaksi();
+        mPP.simpantransaksi();
         
     }
 }

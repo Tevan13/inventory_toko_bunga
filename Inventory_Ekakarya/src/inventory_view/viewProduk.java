@@ -1,21 +1,128 @@
-/*
+    /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package inventory_view;
 
+import inventory_controller.controllerProduk;
+import invetory_db.koneksi;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JButton;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Windows 10
  */
 public class viewProduk extends javax.swing.JFrame {
+    private controllerProduk cP;
+    private DefaultTableModel tabel;
 
     /**
      * Creates new form viewBarang
      */
     public viewProduk() {
         initComponents();
+        
+        cP = new controllerProduk(this);
+        tabel = new DefaultTableModel();
+        listproduk_TB1.setModel(tabel);
+        
+        tabel.addColumn("Id Produk");
+        tabel.addColumn("Nama Produk");
+        tabel.addColumn("Kategori");
+        tabel.addColumn("Harga Satuan");
+        tabel.addColumn("Stok");
+        
+        cP.kontrol();
+        TampilTabel();
+    }
+    public JTextField getHarga() {
+        return hargaSatuan_TF4;
+    }
+
+    public JTextField getIdProduk() {
+        return idProduk_TF1;
+    }
+
+    public JTextField getKategori() {
+        return kategori_TF3;
+    }
+
+    public JTextField getNamaProduk() {
+        return namaProduk_TF2;
+    }
+
+    public JTextField getStok() {
+        return stok_TF5;
+    }
+
+    public JButton getBatal() {
+        return batal_BT1;
+    }
+
+    public JButton getUbah() {
+        return ubah_BT3;
+    }
+
+    public JButton getHapus() {
+        return hapus_BT2;
+    }
+
+    public JButton getSimpan() {
+        return simpan_BT4;
+    }
+    
+    private void TampilTabel (){
+        tabel.getDataVector().removeAllElements();
+        tabel.fireTableDataChanged();
+        
+        String sql = "SELECT * FROM produk ";
+        try {
+            Statement stat = (Statement) koneksi.getKoneksi().createStatement();
+            ResultSet res  = stat.executeQuery(sql);
+            
+            while (res.next()){
+                Object[] hasil;
+                hasil = new Object[5];
+                hasil[0] = res.getString("idProduk");
+                hasil[1] = res.getString("namaProduk");
+                hasil[2] = res.getString("kategori");
+                hasil[3] = res.getString("hargaProduk");
+                hasil[4] = res.getString("stok"); 
+                
+                tabel.addRow(hasil);
+                
+            }
+            
+        } catch (SQLException ex) {
+            System.out.println("Terjadi Error");;
+        }  
+    }
+    
+    private void AmbilDataTabel(){
+        int index = listproduk_TB1.getSelectedRow();
+        String idproduk = String.valueOf(listproduk_TB1.getValueAt(index, 0));
+        String namaproduk = String.valueOf(listproduk_TB1.getValueAt(index, 1));
+        String kategori = String.valueOf(listproduk_TB1.getValueAt(index, 2));
+        String harga = String.valueOf(listproduk_TB1.getValueAt(index, 3));
+        String stok = String.valueOf(listproduk_TB1.getValueAt(index, 4));
+        
+        
+        idProduk_TF1.setText(idproduk);
+        namaProduk_TF2.setText(namaproduk);
+        kategori_TF3.setText(kategori);
+        hargaSatuan_TF4.setText(harga);
+        stok_TF5.setText(stok);
+        
+        
+        cP.kontroldua();
     }
 
     /**
@@ -28,31 +135,29 @@ public class viewProduk extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        listproduk_TB1 = new javax.swing.JTable();
         jLabel7 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        buttonHapus = new javax.swing.JButton();
-        buttonBatal = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        hapus_BT2 = new javax.swing.JButton();
+        batal_BT1 = new javax.swing.JButton();
+        idProduk_TF1 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        buttonUbah = new javax.swing.JButton();
+        ubah_BT3 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        buttonSimpan = new javax.swing.JButton();
+        simpan_BT4 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
+        stok_TF5 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
-        jTextField6 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField7 = new javax.swing.JTextField();
+        hargaSatuan_TF4 = new javax.swing.JTextField();
+        kategori_TF3 = new javax.swing.JTextField();
+        namaProduk_TF2 = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        cari_TF6 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        listproduk_TB1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -63,30 +168,36 @@ public class viewProduk extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        listproduk_TB1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listproduk_TB1MouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(listproduk_TB1);
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel7.setText("List Produk");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Manage Produk", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 18))); // NOI18N
 
-        buttonHapus.setText("HAPUS");
-        buttonHapus.addActionListener(new java.awt.event.ActionListener() {
+        hapus_BT2.setText("HAPUS");
+        hapus_BT2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonHapusActionPerformed(evt);
+                hapus_BT2ActionPerformed(evt);
             }
         });
 
-        buttonBatal.setText("BATAL");
-        buttonBatal.addActionListener(new java.awt.event.ActionListener() {
+        batal_BT1.setText("BATAL");
+        batal_BT1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonBatalActionPerformed(evt);
+                batal_BT1ActionPerformed(evt);
             }
         });
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        idProduk_TF1.setEnabled(false);
+        idProduk_TF1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                idProduk_TF1ActionPerformed(evt);
             }
         });
 
@@ -94,51 +205,47 @@ public class viewProduk extends javax.swing.JFrame {
 
         jLabel2.setText("Nama Produk");
 
-        buttonUbah.setText("UBAH");
-        buttonUbah.addActionListener(new java.awt.event.ActionListener() {
+        ubah_BT3.setText("UBAH");
+        ubah_BT3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonUbahActionPerformed(evt);
+                ubah_BT3ActionPerformed(evt);
             }
         });
 
-        jLabel3.setText("Jenis Produk");
+        jLabel3.setText("Kategori");
 
-        buttonSimpan.setText("SIMPAN");
-        buttonSimpan.addActionListener(new java.awt.event.ActionListener() {
+        simpan_BT4.setText("SIMPAN");
+        simpan_BT4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonSimpanActionPerformed(evt);
+                simpan_BT4ActionPerformed(evt);
             }
         });
 
         jLabel4.setText("Harga Satuan");
 
-        jTextField5.addActionListener(new java.awt.event.ActionListener() {
+        stok_TF5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField5ActionPerformed(evt);
+                stok_TF5ActionPerformed(evt);
             }
         });
-
-        jLabel5.setText("Kategori");
 
         jLabel6.setText("Stok");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jTextField6.addActionListener(new java.awt.event.ActionListener() {
+        hargaSatuan_TF4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField6ActionPerformed(evt);
+                hargaSatuan_TF4ActionPerformed(evt);
             }
         });
 
-        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+        kategori_TF3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField4ActionPerformed(evt);
+                kategori_TF3ActionPerformed(evt);
             }
         });
 
-        jTextField7.addActionListener(new java.awt.event.ActionListener() {
+        namaProduk_TF2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField7ActionPerformed(evt);
+                namaProduk_TF2ActionPerformed(evt);
             }
         });
 
@@ -152,40 +259,37 @@ public class viewProduk extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(kategori_TF3, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(6, 6, 6))
-                            .addComponent(jTextField6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(stok_TF5, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
-                        .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(namaProduk_TF2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(idProduk_TF1, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(hargaSatuan_TF4, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel5)
                         .addComponent(jLabel6)
-                        .addComponent(jLabel4)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addGap(9, 9, 9)
-                            .addComponent(buttonBatal)
+                            .addComponent(batal_BT1)
                             .addGap(18, 18, 18)
-                            .addComponent(buttonHapus)
+                            .addComponent(hapus_BT2)
                             .addGap(18, 18, 18)
-                            .addComponent(buttonUbah)
+                            .addComponent(ubah_BT3)
                             .addGap(27, 27, 27)
-                            .addComponent(buttonSimpan)))
+                            .addComponent(simpan_BT4)))
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
@@ -194,36 +298,32 @@ public class viewProduk extends javax.swing.JFrame {
                 .addContainerGap(51, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(idProduk_TF1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(21, 21, 21)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(namaProduk_TF2, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(22, 22, 22)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(kategori_TF3, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addGap(27, 27, 27)
-                .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(hargaSatuan_TF4, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
                 .addGap(27, 27, 27)
-                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(64, 64, 64))
+                .addComponent(stok_TF5, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(112, 112, 112))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addContainerGap(226, Short.MAX_VALUE)
-                    .addComponent(jLabel4)
-                    .addGap(25, 25, 25)
+                    .addContainerGap(267, Short.MAX_VALUE)
                     .addComponent(jLabel6)
-                    .addGap(31, 31, 31)
-                    .addComponent(jLabel5)
-                    .addGap(37, 37, 37)
+                    .addGap(84, 84, 84)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(buttonSimpan)
-                        .addComponent(buttonUbah)
-                        .addComponent(buttonHapus)
-                        .addComponent(buttonBatal))
+                        .addComponent(simpan_BT4)
+                        .addComponent(ubah_BT3)
+                        .addComponent(hapus_BT2)
+                        .addComponent(batal_BT1))
                     .addContainerGap()))
         );
 
@@ -236,76 +336,88 @@ public class viewProduk extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(216, 216, 216)
+                        .addComponent(jLabel7)
+                        .addGap(215, 215, 215))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel7))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField2)))
-                .addGap(50, 50, 50))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel8)
+                                .addGap(27, 27, 27)
+                                .addComponent(cari_TF6, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(40, 40, 40))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(72, 72, 72)
                         .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(36, 36, 36)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel8)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(21, 21, 21)
+                            .addComponent(cari_TF6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(34, 34, 34)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void buttonHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonHapusActionPerformed
+    private void namaProduk_TF2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_namaProduk_TF2ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_buttonHapusActionPerformed
+    }//GEN-LAST:event_namaProduk_TF2ActionPerformed
 
-    private void buttonBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBatalActionPerformed
+    private void kategori_TF3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kategori_TF3ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_buttonBatalActionPerformed
+    }//GEN-LAST:event_kategori_TF3ActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void hargaSatuan_TF4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hargaSatuan_TF4ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_hargaSatuan_TF4ActionPerformed
 
-    private void buttonUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUbahActionPerformed
+    private void stok_TF5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stok_TF5ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_buttonUbahActionPerformed
+    }//GEN-LAST:event_stok_TF5ActionPerformed
 
-    private void buttonSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSimpanActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonSimpanActionPerformed
+    private void simpan_BT4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpan_BT4ActionPerformed
+        // TODO add your handling code here:\
+        cP.simpan();
+        
+    }//GEN-LAST:event_simpan_BT4ActionPerformed
 
-    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
+    private void ubah_BT3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ubah_BT3ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField5ActionPerformed
+        cP.update();
+        TampilTabel();
+    }//GEN-LAST:event_ubah_BT3ActionPerformed
 
-    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
+    private void idProduk_TF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idProduk_TF1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField6ActionPerformed
+    }//GEN-LAST:event_idProduk_TF1ActionPerformed
 
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+    private void batal_BT1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_batal_BT1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
+        cP.kontrol();
+        cP.clear();
+    }//GEN-LAST:event_batal_BT1ActionPerformed
 
-    private void jTextField7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField7ActionPerformed
+    private void hapus_BT2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapus_BT2ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField7ActionPerformed
+        cP.delete();
+        TampilTabel();
+    }//GEN-LAST:event_hapus_BT2ActionPerformed
+
+    private void listproduk_TB1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listproduk_TB1MouseClicked
+        // TODO add your handling code here:
+        AmbilDataTabel();
+    }//GEN-LAST:event_listproduk_TB1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -350,27 +462,25 @@ public class viewProduk extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton buttonBatal;
-    private javax.swing.JButton buttonHapus;
-    private javax.swing.JButton buttonSimpan;
-    private javax.swing.JButton buttonUbah;
-    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JButton batal_BT1;
+    private javax.swing.JTextField cari_TF6;
+    private javax.swing.JButton hapus_BT2;
+    private javax.swing.JTextField hargaSatuan_TF4;
+    private javax.swing.JTextField idProduk_TF1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
+    private javax.swing.JTextField kategori_TF3;
+    private javax.swing.JTable listproduk_TB1;
+    private javax.swing.JTextField namaProduk_TF2;
+    private javax.swing.JButton simpan_BT4;
+    private javax.swing.JTextField stok_TF5;
+    private javax.swing.JButton ubah_BT3;
     // End of variables declaration//GEN-END:variables
 }

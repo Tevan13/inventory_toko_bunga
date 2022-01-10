@@ -5,6 +5,7 @@
  */
 package invetory_db;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
@@ -13,9 +14,9 @@ import java.sql.SQLException;
  * @author ertit
  */
 public class koneksi {
-    private static java.sql.Connection koneksi;
-    public static java.sql.Connection getKoneksi(){
-        if(koneksi == null){
+    private static Connection conn;
+    public static Connection getKoneksi(){
+        if(conn == null){
           try{
               String url = "jdbc:mysql://localhost/invent_bunga";
               String user = "root";
@@ -23,13 +24,18 @@ public class koneksi {
               
               DriverManager.registerDriver(new com.mysql.jdbc.Driver());
               
-              koneksi = DriverManager.getConnection(url, user, password);
+              conn = DriverManager.getConnection(url, user, password);
           }catch(SQLException t){
               System.out.println("Error Membuat Koneksi");
           }  
         }
-        return koneksi;
+        return conn;
 
     }
-    
+    public static void main(String args[]) throws SQLException{
+        if(getKoneksi().equals(conn)){
+            System.out.print("sukses terkoneksi");
+        }
+   
+    }
 }

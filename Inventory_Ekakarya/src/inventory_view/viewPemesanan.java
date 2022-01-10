@@ -6,6 +6,11 @@
 package inventory_view;
 
 import inventory_controller.controllerPemesanan;
+import invetory_db.koneksi;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -20,7 +25,7 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
      * Creates new form viewPemesanan2
      */
     private DefaultTableModel model;
-    private controllerPemesanan cP;
+    private controllerPemesanan cPP;
     public viewPemesanan() {
         initComponents();
         
@@ -29,13 +34,14 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
         
         model.addColumn("ID ");
         model.addColumn("Nama Produk");
+        model.addColumn("Nama Pelanggan");
         model.addColumn("Kategori");
         model.addColumn("Harga Satuan");
         model.addColumn("Jumlah Beli");
         model.addColumn("Harga Satuan");
         model.addColumn("Harga Total");
     
-        cP = new controllerPemesanan(this);
+        cPP = new controllerPemesanan(this);
     }
 
     public JTextField getBayar_TF5() {
@@ -71,11 +77,11 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
     }
 
     public JTextField getKategori_TF2() {
-        return kategori_TF2;
+        return namaPelanggan_TF7;
     }
 
     public void setKategori_TF2(JTextField kategori_TF2) {
-        this.kategori_TF2 = kategori_TF2;
+        this.namaPelanggan_TF7 = kategori_TF2;
     }
 
     public JTextField getKembalian_TF6() {
@@ -93,6 +99,42 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
     public void setNamaProduk_CB1(JComboBox namaProduk_CB1) {
         this.namaProduk_CB1 = namaProduk_CB1;
     }
+
+    public JTextField getNamaPelanggan_TF7() {
+        return namaPelanggan_TF7;
+    }
+
+    public void setNamaPelanggan_TF7(JTextField namaPelanggan_TF7) {
+        this.namaPelanggan_TF7 = namaPelanggan_TF7;
+    }
+    
+    public final void loadData() {
+        model.getDataVector().removeAllElements();
+        model.fireTableDataChanged();
+        try {
+            Connection conn = koneksi.getKoneksi();
+            Statement stat = conn.createStatement();
+
+            String sql = "SELECT * FROM dtl_pemesanan";
+            ResultSet res = stat.executeQuery(sql);
+
+            while (res.next()) {
+                Object[] hasil = new Object[6];
+                hasil[0] = res.getString("idDtlPemesanan");
+                hasil[1] = res.getString("namaProduk");
+                hasil[2] = res.getString("namaPelanggan");
+                hasil[3] = res.getString("hsatuan");
+                hasil[4] = res.getString("jumlah_beli");
+                hasil[5] = res.getString("harga");
+               
+                model.addRow(hasil);
+            }
+            res.close();
+            stat.close();
+        } catch (SQLException e) {
+            System.out.println("Terjadi Error");
+        }
+   }
     
 
     /**
@@ -111,12 +153,14 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         idPemesanan_TF1 = new javax.swing.JTextField();
-        kategori_TF2 = new javax.swing.JTextField();
+        namaPelanggan_TF7 = new javax.swing.JTextField();
         hargaSatuan_TF3 = new javax.swing.JTextField();
         jumlahBeli_TF4 = new javax.swing.JTextField();
         hitung_BT1 = new javax.swing.JButton();
         tambah_BT2 = new javax.swing.JButton();
         namaProduk_CB1 = new javax.swing.JComboBox();
+        jLabel10 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         totalHarga_LB1 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -125,9 +169,7 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
         bayar_TF5 = new javax.swing.JTextField();
         kembalian_TF6 = new javax.swing.JTextField();
         input_BT5 = new javax.swing.JButton();
-        jLabel10 = new javax.swing.JLabel();
         totalHarga_BT4 = new javax.swing.JButton();
-        cari_BT3 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         pemesanan_TB1 = new javax.swing.JTable();
 
@@ -137,32 +179,52 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
 
         jLabel2.setText("Nama Produk");
 
-        jLabel3.setText("Kategori");
+        jLabel3.setText("Nama Pelanggan");
 
-        jLabel4.setText("Harga Satuan");
+        jLabel4.setText("Kategori");
 
-        jLabel5.setText("Jumlah Beli");
+        jLabel5.setText("Harga Satuan");
+
+        idPemesanan_TF1.setEnabled(false);
+
+        hargaSatuan_TF3.setEnabled(false);
+
+        jumlahBeli_TF4.setEnabled(false);
 
         hitung_BT1.setText("HITUNG");
 
         tambah_BT2.setText("Tambah");
 
-        namaProduk_CB1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        namaProduk_CB1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pilih Barang" }));
+
+        jLabel10.setText("Jumlah Beli");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(198, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(namaProduk_CB1, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                            .addComponent(tambah_BT2)
-                            .addGap(77, 77, 77))
-                        .addComponent(kategori_TF2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(131, 131, 131))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(tambah_BT2)
+                        .addGap(198, 198, 198))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(namaProduk_CB1, 0, 166, Short.MAX_VALUE)
+                            .addComponent(namaPelanggan_TF7, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
+                            .addComponent(jTextField1)
+                            .addComponent(hargaSatuan_TF3, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jumlahBeli_TF4, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(hitung_BT1)
+                        .addGap(36, 36, 36))))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addContainerGap()
@@ -170,16 +232,10 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
                         .addComponent(jLabel4)
                         .addComponent(jLabel5)
                         .addComponent(jLabel1)
-                        .addComponent(jLabel2)
-                        .addComponent(jLabel3))
-                    .addGap(106, 106, 106)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(idPemesanan_TF1, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
-                        .addComponent(hargaSatuan_TF3, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
-                        .addComponent(jumlahBeli_TF4, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE))
-                    .addGap(18, 18, 18)
-                    .addComponent(hitung_BT1)
-                    .addContainerGap(35, Short.MAX_VALUE)))
+                        .addComponent(jLabel2))
+                    .addGap(120, 120, 120)
+                    .addComponent(idPemesanan_TF1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(130, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -187,10 +243,20 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
                 .addGap(69, 69, 69)
                 .addComponent(namaProduk_CB1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33)
-                .addComponent(kategori_TF2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 148, Short.MAX_VALUE)
-                .addComponent(tambah_BT2)
-                .addGap(27, 27, 27))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(namaPelanggan_TF7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addGap(30, 30, 30)
+                .addComponent(hargaSatuan_TF3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(41, 41, 41)
+                .addComponent(jumlahBeli_TF4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(hitung_BT1))
+                .addGap(26, 26, 26)
+                .addComponent(tambah_BT2))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addContainerGap()
@@ -199,18 +265,11 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
                         .addComponent(idPemesanan_TF1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGap(45, 45, 45)
                     .addComponent(jLabel2)
-                    .addGap(38, 38, 38)
-                    .addComponent(jLabel3)
-                    .addGap(26, 26, 26)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel4)
-                        .addComponent(hargaSatuan_TF3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGap(40, 40, 40)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel5)
-                        .addComponent(jumlahBeli_TF4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(hitung_BT1))
-                    .addContainerGap(83, Short.MAX_VALUE)))
+                    .addGap(83, 83, 83)
+                    .addComponent(jLabel4)
+                    .addGap(47, 47, 47)
+                    .addComponent(jLabel5)
+                    .addContainerGap(116, Short.MAX_VALUE)))
         );
 
         totalHarga_LB1.setText("Rp.");
@@ -219,15 +278,12 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
 
         jLabel8.setText("Kembalian");
 
+        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel9.setText("TOTAL HARGA");
 
         input_BT5.setText("INPUT");
 
-        jLabel10.setText("Nama Pelanggan");
-
         totalHarga_BT4.setText("TOTAL");
-
-        cari_BT3.setText("Cari Data Pelanggan");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -237,62 +293,53 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addComponent(input_BT5)
-                                .addGap(122, 122, 122))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addGap(117, 117, 117))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addComponent(totalHarga_BT4)
-                                .addGap(114, 114, 114))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(totalHarga_LB1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(bayar_TF5, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-                                .addComponent(kembalian_TF6, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                .addGap(11, 11, 11)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel8))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(kembalian_TF6, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(bayar_TF5, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(45, 45, 45))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(cari_BT3)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(totalHarga_BT4)
+                        .addGap(108, 108, 108))))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(120, 120, 120)
+                .addComponent(input_BT5)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel9)
+                .addGap(85, 85, 85))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(cari_BT3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(totalHarga_LB1)
                 .addGap(18, 18, 18)
                 .addComponent(totalHarga_BT4)
-                .addGap(24, 24, 24)
+                .addGap(27, 27, 27)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bayar_TF5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
-                .addGap(53, 53, 53)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(kembalian_TF6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
-                .addGap(18, 18, 18)
+                .addGap(42, 42, 42)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel8)
+                    .addComponent(kembalian_TF6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(34, 34, 34)
                 .addComponent(input_BT5)
-                .addContainerGap())
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         pemesanan_TB1.setModel(new javax.swing.table.DefaultTableModel(
@@ -315,7 +362,7 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -324,13 +371,16 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         pack();
@@ -339,7 +389,6 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField bayar_TF5;
-    private javax.swing.JButton cari_BT3;
     private javax.swing.JTextField hargaSatuan_TF3;
     private javax.swing.JButton hitung_BT1;
     private javax.swing.JTextField idPemesanan_TF1;
@@ -356,9 +405,10 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jumlahBeli_TF4;
-    private javax.swing.JTextField kategori_TF2;
     private javax.swing.JTextField kembalian_TF6;
+    private javax.swing.JTextField namaPelanggan_TF7;
     private javax.swing.JComboBox namaProduk_CB1;
     private javax.swing.JTable pemesanan_TB1;
     private javax.swing.JButton tambah_BT2;
