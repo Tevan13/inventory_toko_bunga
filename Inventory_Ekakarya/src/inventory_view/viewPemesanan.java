@@ -8,10 +8,13 @@ package inventory_view;
 import inventory_controller.controllerPemesanan;
 import invetory_db.koneksi;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
@@ -32,7 +35,7 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
         model = new DefaultTableModel();
         pemesanan_TB1.setModel(model);
         
-        model.addColumn("ID ");
+        model.addColumn("ID Produk");
         model.addColumn("Nama Produk");
         model.addColumn("Nama Pelanggan");
         model.addColumn("Kategori");
@@ -62,11 +65,11 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
     }
 
     public JTextField getIdPemesanan_TF1() {
-        return idPemesanan_TF1;
+        return idProduk_TF1;
     }
 
     public void setIdPemesanan_TF1(JTextField idPemesanan_TF1) {
-        this.idPemesanan_TF1 = idPemesanan_TF1;
+        this.idProduk_TF1 = idPemesanan_TF1;
     }
 
     public JTextField getJumlahBeli_TF4() {
@@ -108,6 +111,15 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
     public void setNamaPelanggan_TF7(JTextField namaPelanggan_TF7) {
         this.namaPelanggan_TF3 = namaPelanggan_TF7;
     }
+
+    public JLabel getTotalHarga_LB1() {
+        return totalHarga_LB1;
+    }
+
+    public void setTotalHarga_LB1(JLabel totalHarga_LB1) {
+        this.totalHarga_LB1 = totalHarga_LB1;
+    }
+    
     
     public void loadData() {
         model.getDataVector().removeAllElements();
@@ -121,7 +133,7 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
 
             while (res.next()) {
                 Object[] hasil = new Object[7];
-                hasil[0] = res.getString("idDtlPemesanan");
+                hasil[0] = res.getString("idPemesanan");
                 hasil[1] = res.getString("namaProduk");
                 hasil[2] = res.getString("namaPelanggan");
                 hasil[3] = res.getString("kategori");
@@ -154,6 +166,7 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
         } catch (Exception e) {
         }
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -170,7 +183,7 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        idPemesanan_TF1 = new javax.swing.JTextField();
+        idProduk_TF1 = new javax.swing.JTextField();
         namaPelanggan_TF3 = new javax.swing.JTextField();
         kategori_TF4 = new javax.swing.JTextField();
         hargaSatuan_TF5 = new javax.swing.JTextField();
@@ -189,10 +202,11 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
         input_BT5 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         pemesanan_TB1 = new javax.swing.JTable();
+        kembali_BT5 = new javax.swing.JButton();
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Pemesanan", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 18))); // NOI18N
 
-        jLabel1.setText("ID Pemesanan");
+        jLabel1.setText("ID Produk");
 
         jLabel2.setText("Nama Produk");
 
@@ -202,7 +216,13 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
 
         jLabel5.setText("Harga Satuan");
 
-        idPemesanan_TF1.setEnabled(false);
+        idProduk_TF1.setEnabled(false);
+
+        namaPelanggan_TF3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                namaPelanggan_TF3ActionPerformed(evt);
+            }
+        });
 
         kategori_TF4.setEnabled(false);
 
@@ -277,7 +297,7 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
                         .addComponent(jLabel5)
                         .addComponent(jLabel1))
                     .addGap(120, 120, 120)
-                    .addComponent(idPemesanan_TF1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(idProduk_TF1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(130, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
@@ -310,7 +330,7 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
                     .addContainerGap()
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel1)
-                        .addComponent(idPemesanan_TF1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(idProduk_TF1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGap(144, 144, 144)
                     .addComponent(jLabel4)
                     .addGap(47, 47, 47)
@@ -327,7 +347,23 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel9.setText("TOTAL HARGA");
 
+        bayar_TF5.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                bayar_TF5KeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                bayar_TF5KeyTyped(evt);
+            }
+        });
+
+        kembalian_TF6.setEditable(false);
+
         input_BT5.setText("INPUT");
+        input_BT5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                input_BT5ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -390,6 +426,13 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
         ));
         jScrollPane1.setViewportView(pemesanan_TB1);
 
+        kembali_BT5.setText("Kembali");
+        kembali_BT5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                kembali_BT5ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -399,9 +442,15 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jScrollPane1)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(kembali_BT5)
+                        .addGap(120, 120, 120))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -413,9 +462,15 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(25, 25, 25)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(36, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(kembali_BT5)
+                        .addGap(116, 116, 116))))
         );
 
         pack();
@@ -428,7 +483,7 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
     private void namaProduk_CB1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_namaProduk_CB1ItemStateChanged
         // TODO add your handling code here:
         if(namaProduk_CB1.getSelectedItem().equals("Pilih Produk")){
-            idPemesanan_TF1.setText("");
+            idProduk_TF1.setText("");
             kategori_TF4.setText("");
             hargaSatuan_TF5.setText("");
         }else{
@@ -448,7 +503,7 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
                 hasil[4] = res.getString("kategori");
                 hasil[5] = res.getString("tanggal_masuk");
                 
-                
+                idProduk_TF1.setText((String) hasil[0]);
                 kategori_TF4.setText((String) hasil[4]);
                 hargaSatuan_TF5.setText((String) hasil[3]);
             }
@@ -475,7 +530,7 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
 
     private void tambah_BT2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tambah_BT2ActionPerformed
         // TODO add your handling code here:
-        String idPemesanan = idPemesanan_TF1.getText();
+        String idProduk = idProduk_TF1.getText();
         String namaProduk = (String) namaProduk_CB1.getSelectedItem();
         String namaPelanggan = namaPelanggan_TF3.getText();
         String kategori = kategori_TF4.getText();
@@ -483,8 +538,9 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
         String JumlahBeli = jumlahBeli_TF6.getText();
         String totalHarga = totalHarga_TF8.getText();
         
+        
         Object[] hasil = new Object[7];
-                hasil[0] = idPemesanan;
+                hasil[0] = idProduk;
                 hasil[1] = namaProduk;
                 hasil[2] = namaPelanggan;
                 hasil[3] = kategori;
@@ -502,11 +558,140 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
         
     }//GEN-LAST:event_tambah_BT2ActionPerformed
 
+    private void bayar_TF5KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_bayar_TF5KeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bayar_TF5KeyTyped
+
+    private void bayar_TF5KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_bayar_TF5KeyReleased
+        // TODO add your handling code here:
+        int TotalHarga = 0;
+        int TotalBayar = 0;
+        TotalHarga = Integer.parseInt((String)totalHarga_LB1.getText().replace("Rp.", ""));
+        if(!bayar_TF5.getText().isEmpty()){
+        TotalBayar = Integer.parseInt((String)bayar_TF5.getText());
+        }
+        
+        int Kembalian = TotalBayar - TotalHarga;
+        if(Kembalian < 1){
+            kembalian_TF6.setText(0+""); 
+        }else{
+         kembalian_TF6.setText(Kembalian+"");   
+        }
+    }//GEN-LAST:event_bayar_TF5KeyReleased
+
+    private void input_BT5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_input_BT5ActionPerformed
+        // TODO add your handling code here:
+       String sql = "INSERT INTO pemesanan (`idPemesanan`, `namaProduk`, `namaPelanggan`, `kategori`, `hargaProduk`, `jumlahBeli`, `totalHarga`, `bayar`, `kembalian`) " 
+                     +"VALUES (NULL, '"+namaProduk_CB1.getSelectedItem()+"', '"+namaPelanggan_TF3.getText()+"', '"+kategori_TF4.getText()+"', '"+hargaSatuan_TF5.getText()+"', '"+jumlahBeli_TF6.getText()+"', '"+totalHarga_LB1.getText().replace("Rp.", "")+"', "
+                   + "'"+bayar_TF5.getText()+"', '"+kembalian_TF6.getText()+"')";
+////                  "INSERT INTO `pemesanan` (`idPemesanan`, `namaProduk`, `kategori`, `hargaProduk`, `jumlahBeli`, `totalHarga`, `bayar`, `kembalian`, `date_create`, `namaPelanggan`)
+////                  VALUES (NULL, 'Anggrek', 'Bunga', '2000000', '2', '4000000', '5000000', '1000000', current_timestamp(), 'Sakon');
+//        try {
+//            int jumlahrow = pemesanan_TB1.getRowCount();
+//            Object[][]hasil;
+//            hasil = new Object[7][7];
+//        
+//            for(int x=0; x < jumlahrow; x++){
+//                hasil[x][0] = pemesanan_TB1.getValueAt(x, 0).toString();
+//                hasil[x][1] = pemesanan_TB1.getValueAt(x, 1).toString();
+//                hasil[x][2] = pemesanan_TB1.getValueAt(x, 2).toString();
+//                hasil[x][3] = pemesanan_TB1.getValueAt(x, 3).toString();
+//                hasil[x][4] = pemesanan_TB1.getValueAt(x, 4).toString();
+//                hasil[x][5] = pemesanan_TB1.getValueAt(x, 5).toString();
+//                hasil[x][6] = pemesanan_TB1.getValueAt(x, 6).toString();
+//                
+//                
+//               
+//                    Connection conn = koneksi.getKoneksi();
+//                    Statement stat = conn.createStatement();
+//                
+//                    String sql2 = "SELECT stok FROM produk WHERE idProduk='"+hasil[x][1]+"' ";
+//                    ResultSet res = stat.executeQuery(sql2);
+//                    int stok1 = 0;
+//                    int stok = 0;
+//                    while (res.next()){
+//                    Object[]hasil2;  
+//                    hasil2 = new Object [1];
+//                    hasil2[0] = res.getString("stok");
+//                    stok = Integer.parseInt(String.valueOf(hasil2[0])) ;
+//                    }
+//                    stok1 = stok - Integer.parseInt(String.valueOf(hasil[x][2].toString()));
+//                 
+//                
+//            
+//                
+//            
+//                String sql3 = "INSERT INTO `dtl_pemesanan` (`idPemesanan`, `idProduk`, `namaPelanggan`, `kategori`, `namaProduk`, `hargaProduk`, `jumlahBeli`, `totalHarga`)"
+//                + "VALUES ('"+hasil[x][0]+"','"+hasil[x][1]+"','"+hasil[x][2]+"','"+hasil[x][3]+"','"+hasil[x][4]+"','"+hasil[x][5]+"','"+hasil[x][6]+"')" ; 
+//        
+//                String sql4 = "UPDATE produk SET stok = '"+stok1+"' WHERE idProduk = '"+hasil[x][1]+"' ";        
+//                try {
+//                    PreparedStatement eksekusi1 = koneksi.getKoneksi().prepareStatement(sql);
+//                    eksekusi1.execute();
+//                    
+//                    PreparedStatement eksekusi2 = koneksi.getKoneksi().prepareStatement(sql3);
+//                    eksekusi2.execute();
+//            
+//                    PreparedStatement eksekusi3 = koneksi.getKoneksi().prepareStatement(sql4);
+//                    eksekusi3.execute();
+//            
+//                     JOptionPane.showMessageDialog(null, "Data berhasil disimpan ke dalam Database");
+//            
+//                } catch (SQLException ex) {
+//            //Logger.getLogger(ModelPelanggan.class.getName()).log(Level.SEVERE, null, ex);
+//                    JOptionPane.showMessageDialog(null, "Data gagal disimpan ke dalam Database \n" + ex);
+//                }
+//            }
+//        } catch (Exception e) {
+//            JOptionPane.showMessageDialog(null, "Data gagal \n" +e +sql);
+//        }
+       
+        try {
+            Statement stat = koneksi.getKoneksi().createStatement();
+            long lastInsertID = stat.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            ResultSet res = stat.getGeneratedKeys();
+            if(res.next()){
+                sql = "INSERT INTO `dtl_pemesanan` (`idPemesanan`, `idProduk`, `hargaProduk`, `jumlahBeli`, `totalHarga`)VALUES";
+                for(int i = 0; i < model.getRowCount(); i++){
+                    String postfix = i == 0 ? "" : ",";
+                    String idproduk = (String) model.getValueAt(i, 0);
+                    String namapelanggan = (String) model.getValueAt(i, 2);
+                    String kategori = (String) model.getValueAt(i, 3);
+                    String harga = (String) model.getValueAt(i, 4);
+                    String jumlah = (String) model.getValueAt(i, 5);
+                    String total = (String) model.getValueAt(i, 6);
+                    String val = "("+res.getLong(1)+","+idproduk+","+harga+","+jumlah+","+total+")";
+                    sql += postfix + val;
+                }
+                sql += ";";
+                System.out.println("Last Inserted ID = "+ res.getLong(1));
+                PreparedStatement eksekusi = koneksi.getKoneksi().prepareStatement(sql);
+                eksekusi.execute();
+                JOptionPane.showMessageDialog(null, sql);
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Data gagal disimpan ke dalam Database \n" + ex + "\n" + sql);
+        }
+       
+//        INSERT INTO `dtl_pemesanan` (`idPemesanan`, `idProduk`, `namaPelanggan`, `kategori`, `namaProduk`, `hargaProduk`, `jumlahBeli`, `totalHarga`) 
+//        VALUES ('6', '1', 'Sakon', 'Bunga', 'Anggrek', '2000000', '2', '4000000');
+        
+    }//GEN-LAST:event_input_BT5ActionPerformed
+
+    private void namaPelanggan_TF3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_namaPelanggan_TF3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_namaPelanggan_TF3ActionPerformed
+
+    private void kembali_BT5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kembali_BT5ActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_kembali_BT5ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField bayar_TF5;
     private javax.swing.JTextField hargaSatuan_TF5;
-    private javax.swing.JTextField idPemesanan_TF1;
+    private javax.swing.JTextField idProduk_TF1;
     private javax.swing.JButton input_BT5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -522,6 +707,7 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jumlahBeli_TF6;
     private javax.swing.JTextField kategori_TF4;
+    private javax.swing.JButton kembali_BT5;
     private javax.swing.JTextField kembalian_TF6;
     private javax.swing.JTextField namaPelanggan_TF3;
     private javax.swing.JComboBox namaProduk_CB1;

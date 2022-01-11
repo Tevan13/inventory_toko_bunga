@@ -5,17 +5,82 @@
  */
 package inventory_view;
 
+import invetory_db.koneksi;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import net.proteanit.sql.DbUtils;
+
 /**
  *
  * @author ertit
  */
 public class viewLaporanJual extends javax.swing.JFrame {
+    private DefaultTableModel model;
 
     /**
      * Creates new form viewLaporanJual
      */
     public viewLaporanJual() {
         initComponents();
+        
+//        model = new DefaultTableModel();
+//        laporan_TB1.setModel(model);
+//        model.addColumn("idPemesanan");
+//        model.addColumn("namaProduk");
+//        model.addColumn("kategori");
+//        model.addColumn("hargaProduk");
+//        model.addColumn("jumlahBeli");
+//        model.addColumn("totalHarga");
+//        model.addColumn("bayar");
+//        model.addColumn("kembalian");
+//        model.addColumn("date_create");
+//        
+//        
+//    }
+//    private void tampilDataLaporan(){
+//        
+//        model.getDataVector().removeAllElements();
+//        model.fireTableDataChanged();
+//        
+//        String sql = "SELECT * FROM pemesanan where date_create between ? and ?";
+//        
+//        try {        
+//            Statement stat = (Statement) koneksi.getKoneksi().createStatement();
+//            ResultSet res = stat.executeQuery(sql);
+//            
+//            while(res.next()){
+//                //mengambil hasil query variabel sql
+//                Object[] hasil = new Object[10];
+//                hasil[0] = res.getString("idPemesanan");
+//                hasil[1] = res.getString("namaProduk");
+//                hasil[2] = res.getString("namaPelanggan");
+//                hasil[3] = res.getString("kategori");
+//                hasil[4] = res.getString("hargaProduk");
+//                hasil[5] = res.getString("jumlahBeli");
+//                hasil[6] = res.getString("totalHarga");
+//                hasil[7] = res.getString("bayar");
+//                hasil[8] = res.getString("kembalian");
+//                hasil[9] = res.getString("date_create");
+//                
+//            }  
+//            } catch(Exception e){
+//                Logger.getLogger(viewLaporanJual.class.getName()).log(Level.SEVERE, null, e);
+//            }
+//                    
+//                    }
+//    private void DateCreate(){
+//        String fromdate = ((JTextField)fromDate_DC1.getDateEditor().getUiComponent()).getText();
+//        String todate = ((JTextField)toDate_DC2.getDateEditor().getUiComponent()).getText();
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        
     }
 
     /**
@@ -31,13 +96,13 @@ public class viewLaporanJual extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        fromDate = new com.toedter.calendar.JDateChooser();
-        toDate = new com.toedter.calendar.JDateChooser();
+        show_BT1 = new javax.swing.JButton();
+        fromDate_DC1 = new com.toedter.calendar.JDateChooser();
+        toDate_DC2 = new com.toedter.calendar.JDateChooser();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        laporan_TB1 = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Laporan Penjualan", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Agency FB", 3, 18))); // NOI18N
@@ -48,11 +113,16 @@ public class viewLaporanJual extends javax.swing.JFrame {
 
         jLabel2.setText("To:");
 
-        jButton1.setText("Show");
+        show_BT1.setText("Show");
+        show_BT1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                show_BT1ActionPerformed(evt);
+            }
+        });
 
-        fromDate.setDateFormatString("yyyy-MM-dd");
+        fromDate_DC1.setDateFormatString("yyyy-MM-dd");
 
-        toDate.setDateFormatString("yyyy-MM-dd");
+        toDate_DC2.setDateFormatString("yyyy-MM-dd");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -62,15 +132,15 @@ public class viewLaporanJual extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(fromDate, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(fromDate_DC1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 102, Short.MAX_VALUE)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(toDate, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(toDate_DC2, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(show_BT1)
                 .addGap(235, 235, 235))
         );
         jPanel2Layout.setVerticalGroup(
@@ -80,14 +150,14 @@ public class viewLaporanJual extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
                     .addComponent(jLabel1)
-                    .addComponent(fromDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(toDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(fromDate_DC1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(toDate_DC2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(show_BT1)
                 .addContainerGap())
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        laporan_TB1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -98,7 +168,7 @@ public class viewLaporanJual extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(laporan_TB1);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -141,6 +211,60 @@ public class viewLaporanJual extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void show_BT1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_show_BT1ActionPerformed
+        // TODO add your handling code here:
+        
+//        try {
+//            Connection conn = koneksi.getKoneksi();
+//            Statement stat = conn.createStatement();
+//
+//            String sql = "SELECT * FROM pemesanan where date_create between ? and ?";
+//            ResultSet res = stat.executeQuery(sql);
+//
+//            while (res.next()) {
+//                Object[] hasil = new Object[10];
+//                hasil[0] = res.getString("idPemesanan");
+//                hasil[1] = res.getString("namaProduk");
+//                hasil[2] = res.getString("namaPelanggan");
+//                hasil[3] = res.getString("kategori");
+//                hasil[4] = res.getString("hargaProduk");
+//                hasil[5] = res.getString("jumlahBeli");
+//                hasil[6] = res.getString("totalHarga");
+//                hasil[7] = res.getString("bayar");
+//                hasil[8] = res.getString("kembalian");
+//                hasil[9] = res.getString("date_create");
+//                
+//                
+//                
+//                res.close();
+//                stat.close();
+//            }
+//            } catch (Exception e){
+//            }
+//        }
+        String fromdate = ((JTextField)fromDate_DC1.getDateEditor().getUiComponent()).getText();
+        String todate = ((JTextField)toDate_DC2.getDateEditor().getUiComponent()).getText();
+        Connection con = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            
+          con = koneksi.getKoneksi();
+          String sql = "select * from pemesanan where date_create between ? and ?";
+          
+        pst = con.prepareStatement(sql);
+        pst.setString(1, fromdate);
+        pst.setString(2, todate);
+        rs = pst.executeQuery();
+        laporan_TB1.setModel(DbUtils.resultSetToTableModel(rs));
+           } catch (Exception e) {
+               e.printStackTrace();
+           }
+               
+        
+        
+    }//GEN-LAST:event_show_BT1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -178,14 +302,14 @@ public class viewLaporanJual extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.toedter.calendar.JDateChooser fromDate;
-    private javax.swing.JButton jButton1;
+    private com.toedter.calendar.JDateChooser fromDate_DC1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private com.toedter.calendar.JDateChooser toDate;
+    private javax.swing.JTable laporan_TB1;
+    private javax.swing.JButton show_BT1;
+    private com.toedter.calendar.JDateChooser toDate_DC2;
     // End of variables declaration//GEN-END:variables
 }
