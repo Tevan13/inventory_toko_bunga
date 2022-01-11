@@ -9,11 +9,13 @@ import invetory_db.koneksi;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
@@ -24,12 +26,23 @@ import net.proteanit.sql.DbUtils;
  */
 public class viewLaporanJual extends javax.swing.JFrame {
     private DefaultTableModel model;
+    
 
     /**
      * Creates new form viewLaporanJual
      */
     public viewLaporanJual() {
         initComponents();
+        model = new DefaultTableModel();
+        laporan_TB1.setModel(model);
+        model.addColumn("Id Pemesanan");
+        model.addColumn("Nama Produk");
+        model.addColumn("Nama Pelanggan");
+        model.addColumn("Harga Produk");
+        model.addColumn("Jumlah Beli");
+        model.addColumn("Total Harga");
+        model.addColumn("Kembalian");
+        model.addColumn("Tanggal");
         
 //        model = new DefaultTableModel();
 //        laporan_TB1.setModel(model);
@@ -213,6 +226,62 @@ public class viewLaporanJual extends javax.swing.JFrame {
 
     private void show_BT1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_show_BT1ActionPerformed
         // TODO add your handling code here:
+        Date date1 = fromDate_DC1.getDate();
+        Date date2 = toDate_DC2.getDate();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        model.getDataVector().removeAllElements();
+        model.fireTableDataChanged();
+        String sql = "SELECT * FROM pemesanan '" + sdf.format(date1) + "' AND '" + sdf.format(date2) + "'";
+        
+        System.out.print(sql);
+        try {
+
+            Statement stat = (Statement) koneksi.getKoneksi().createStatement();
+            ResultSet res = stat.executeQuery(sql);
+
+            while (res.next()) {
+                Object[] hasil = new Object[10];
+                hasil[0] = res.getString("idPemesanan");
+                hasil[1] = res.getString("namaProduk");
+                hasil[2] = res.getString("namaPelanggan");
+                hasil[3] = res.getString("kategori");
+                hasil[4] = res.getString("hargaProduk");
+                hasil[5] = res.getString("jumlahBeli");
+                hasil[6] = res.getString("totalHarga");
+                hasil[7] = res.getString("bayar");
+                hasil[8] = res.getString("kembalian");
+                hasil[9] = res.getString("date_create");
+
+                model.addRow(hasil);
+            }
+            JOptionPane.showMessageDialog(null, "Suskes menampilkan data ");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Tidak dapat menampilkan data " + ex);
+//            Logger.getLogger(ViewPelanggan.class.getName()).log(Level.SEVERE, null, ex);
+        }
+//        java.util.Date dt1,dt2;     
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        dt1=fromDate_DC1.getDate();
+//        dt2=toDate_DC2.getDate();
+//        String strdtver1=(String) sdf.format(fromDate_DC1.getDate());
+//        String strdtver2=(String) sdf.format(toDate_DC2.getDate());
+//        
+//            try (
+//                    Connection conn = koneksi.getKoneksi();
+//                    Statement stat = conn.createStatement();
+//                    PreparedStatement statement =
+//                    conn.prepareStatement("insert into pemesanan values  idPemesanan, namaProduk, namaPelanggan, kategori, hargaProduk, jumlahBeli, totalHarga, bayar, kembalian, date_create")) {
+//
+//                    statement.setString(1, n);
+//                    statement.setDate(2, dt1);
+//                    statement.setDate(3, dt2);
+//                    statement.setString(4, i);
+//
+//                    statement.executeUpdate();
+//                }catch(Exception e) {
+//                JOptionPane.showMessageDialog(this,e.getMessage());
+//  }
+
         
 //        try {
 //            Connection conn = koneksi.getKoneksi();
@@ -242,24 +311,24 @@ public class viewLaporanJual extends javax.swing.JFrame {
 //            } catch (Exception e){
 //            }
 //        }
-        String fromdate = ((JTextField)fromDate_DC1.getDateEditor().getUiComponent()).getText();
-        String todate = ((JTextField)toDate_DC2.getDateEditor().getUiComponent()).getText();
-        Connection con = null;
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-        try {
-            
-          con = koneksi.getKoneksi();
-          String sql = "select * from pemesanan where date_create between ? and ?";
-          
-        pst = con.prepareStatement(sql);
-        pst.setString(1, fromdate);
-        pst.setString(2, todate);
-        rs = pst.executeQuery();
-        laporan_TB1.setModel(DbUtils.resultSetToTableModel(rs));
-           } catch (Exception e) {
-               e.printStackTrace();
-           }
+//        String fromdate = ((JTextField)fromDate_DC1.getDateEditor().getUiComponent()).getText();
+//        String todate = ((JTextField)toDate_DC2.getDateEditor().getUiComponent()).getText();
+//        Connection con = null;
+//        PreparedStatement pst = null;
+//        ResultSet rs = null;
+//        try {
+//            
+//          con = koneksi.getKoneksi();
+//          String sql = "select * from pemesanan where date_create between ? and ?";
+//          
+//        pst = con.prepareStatement(sql);
+//        pst.setString(1, fromdate);
+//        pst.setString(2, todate);
+//        rs = pst.executeQuery();
+//        laporan_TB1.setModel(DbUtils.resultSetToTableModel(rs));
+//           } catch (Exception e) {
+//               e.printStackTrace();
+//           }
                
         
         
