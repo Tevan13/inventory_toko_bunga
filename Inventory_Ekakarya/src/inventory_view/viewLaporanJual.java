@@ -38,9 +38,11 @@ public class viewLaporanJual extends javax.swing.JFrame {
         model.addColumn("Id Pemesanan");
         model.addColumn("Nama Produk");
         model.addColumn("Nama Pelanggan");
+        model.addColumn("Kategori");
         model.addColumn("Harga Produk");
         model.addColumn("Jumlah Beli");
         model.addColumn("Total Harga");
+        model.addColumn("Bayar");
         model.addColumn("Kembalian");
         model.addColumn("Tanggal");
         
@@ -231,7 +233,8 @@ public class viewLaporanJual extends javax.swing.JFrame {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         model.getDataVector().removeAllElements();
         model.fireTableDataChanged();
-        String sql = "SELECT * FROM pemesanan '" + sdf.format(date1) + "' AND '" + sdf.format(date2) + "'";
+        String sql = "SELECT * FROM `pemesanan` WHERE `date_create` BETWEEN '" + sdf.format(date1) + "' AND '" + sdf.format(date2) + "'";
+//        SELECT * FROM `pemesanan` WHERE `date_create` BETWEEN '2022-01-11 08:39:34.000000' AND '2022-01-12 08:39:34.000000'
         
         System.out.print(sql);
         try {

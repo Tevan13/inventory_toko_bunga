@@ -79,6 +79,7 @@ public class viewProduk extends javax.swing.JFrame {
     public JButton getSimpan() {
         return simpan_BT4;
     }
+   
     
     private void TampilTabel (){
         tabel.getDataVector().removeAllElements();

@@ -27,6 +27,7 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
     /**
      * Creates new form viewPemesanan2
      */
+    private int MaxStok = 0;
     private DefaultTableModel model;
     private controllerPemesanan cPP;
     public viewPemesanan() {
@@ -47,6 +48,15 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
         loadData();
         cPP = new controllerPemesanan(this);
     }
+
+    public int getMaxStok() {
+        return MaxStok;
+    }
+
+    public void setMaxStok(int MaxStok) {
+        this.MaxStok = MaxStok;
+    }
+    
 
     public JTextField getBayar_TF5() {
         return bayar_TF5;
@@ -486,6 +496,7 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
             idProduk_TF1.setText("");
             kategori_TF4.setText("");
             hargaSatuan_TF5.setText("");
+            setMaxStok(0);
         }else{
             try {
                 Connection conn = koneksi.getKoneksi();
@@ -506,10 +517,12 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
                 idProduk_TF1.setText((String) hasil[0]);
                 kategori_TF4.setText((String) hasil[4]);
                 hargaSatuan_TF5.setText((String) hasil[3]);
+                setMaxStok((int) hasil[2]);
             }
             } catch (Exception e) {
             }
         }
+        ;
             
     }//GEN-LAST:event_namaProduk_CB1ItemStateChanged
 
@@ -530,13 +543,18 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
 
     private void tambah_BT2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tambah_BT2ActionPerformed
         // TODO add your handling code here:
-        String idProduk = idProduk_TF1.getText();
-        String namaProduk = (String) namaProduk_CB1.getSelectedItem();
-        String namaPelanggan = namaPelanggan_TF3.getText();
-        String kategori = kategori_TF4.getText();
-        String hargaSatuan = hargaSatuan_TF5.getText();
-        String JumlahBeli = jumlahBeli_TF6.getText();
-        String totalHarga = totalHarga_TF8.getText();
+        int JumlahBeli1 = Integer.parseInt(jumlahBeli_TF6.getText());
+        if(JumlahBeli1 > MaxStok){
+            JOptionPane.showConfirmDialog(rootPane, "Stok Kurang!");
+            
+        }else{
+            String idProduk = idProduk_TF1.getText();
+            String namaProduk = (String) namaProduk_CB1.getSelectedItem();
+            String namaPelanggan = namaPelanggan_TF3.getText();
+            String kategori = kategori_TF4.getText();
+            String hargaSatuan = hargaSatuan_TF5.getText();
+            String JumlahBeli = jumlahBeli_TF6.getText();
+            String totalHarga = totalHarga_TF8.getText();
         
         
         Object[] hasil = new Object[7];
@@ -555,6 +573,8 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
                     sum = sum + Integer.parseInt((String) model.getValueAt(i, 6));
                 }
                 totalHarga_LB1.setText("Rp."+sum+"");
+            
+        }
         
     }//GEN-LAST:event_tambah_BT2ActionPerformed
 
@@ -667,10 +687,10 @@ public class viewPemesanan extends javax.swing.JInternalFrame {
                 System.out.println("Last Inserted ID = "+ res.getLong(1));
                 PreparedStatement eksekusi = koneksi.getKoneksi().prepareStatement(sql);
                 eksekusi.execute();
-                JOptionPane.showMessageDialog(null, sql);
+                JOptionPane.showMessageDialog(null, "Data berhasil di input!");
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Data gagal disimpan ke dalam Database \n" + ex + "\n" + sql);
+            JOptionPane.showMessageDialog(null, "Data gagal di ijnput! \n" + ex + "\n" + sql);
         }
        
 //        INSERT INTO `dtl_pemesanan` (`idPemesanan`, `idProduk`, `namaPelanggan`, `kategori`, `namaProduk`, `hargaProduk`, `jumlahBeli`, `totalHarga`) 
