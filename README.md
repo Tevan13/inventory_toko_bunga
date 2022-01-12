@@ -23,5 +23,6 @@ aplikasi ini sepenuhnya hanya dapat diakses oleh pemilik, namun pemilik dapat me
 Kelompok 2
 
 Universitas Singa Perbangsa Karawang
-Asep Rudi (1910631170165)
+Adi Satrio                    (1910631170001)
+Asep Rudi                     (1910631170165)
 Bintang Mahesa Putera Darajat (1910631170168)
