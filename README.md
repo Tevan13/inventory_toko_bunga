@@ -19,3 +19,8 @@ terdapat package controller,model,dan view:
 - login
 
 aplikasi ini sepenuhnya hanya dapat diakses oleh pemilik, namun pemilik dapat menambahkan privilage untuk admin atau karyawan
+# how to setup
+Kelompok 2
+
+Universitas Singa Perbangsa Karawang
+Asep Rudi (1910631170165)
