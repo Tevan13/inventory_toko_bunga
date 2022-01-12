@@ -24,3 +24,4 @@ Kelompok 2
 
 Universitas Singa Perbangsa Karawang
 Asep Rudi (1910631170165)
+Bintang Mahesa Putera Darajat (1910631170168)
