@@ -1,4 +1,4 @@
-# inventory_toko_bunga## struktur folder
+# inventory_toko_bunga##
 - projek java
 root/uas_project
 # how to setup
