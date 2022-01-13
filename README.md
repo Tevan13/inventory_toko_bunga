@@ -1,6 +1,8 @@
-# inventory_toko_bunga##
-- projek java
-root/uas_project
+# inventory_toko_bunga
+Rancang bangun Inventory manajemen system penjualan tanaman hias berbasis desktop pada sebuah toko bunga yang bernama ekakarya gallery
+merupakan sebuah aplikasi berbasis desktop yang dibuat untuk membantu kegiatan yang berhubungan 
+dengan perencanaan, pelaksanaan, dan pengawasan penentuan kebutuhan material pada EkaKarya Gallery
+ 
 # how to setup
 - clone this repo
 ```console
@@ -19,10 +21,8 @@ terdapat package controller,model,dan view:
 - login
 
 aplikasi ini sepenuhnya hanya dapat diakses oleh pemilik, namun pemilik dapat menambahkan privilage untuk admin atau karyawan
-# how to setup
-Kelompok 2
 
-# Anggota Kelompok
+# Kelompok 2
 Universitas SingaPerbangsa Karawang
 - Adi Satrio                    (1910631170001)
 - Andini                        (1910631170005)
