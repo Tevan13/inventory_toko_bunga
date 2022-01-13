@@ -22,12 +22,13 @@ aplikasi ini sepenuhnya hanya dapat diakses oleh pemilik, namun pemilik dapat me
 # how to setup
 Kelompok 2
 
+# Anggota Kelompok
 Universitas SingaPerbangsa Karawang
-Adi Satrio                    (1910631170001)
-Andini                        (1910631170005)
-Asep Rudi                     (1910631170165)
-Bintang Mahesa Putera Darajat (1910631170168)
-Stevanus Ertito Pramudja      (1910631170139)
+- Adi Satrio                    (1910631170001)
+- Andini                        (1910631170005)
+- Asep Rudi                     (1910631170165)
+- Bintang Mahesa Putera Darajat (1910631170168)
+- Stevanus Ertito Pramudja      (1910631170139)
 
 Kelas 5B
 Pemrograman Berbasis Desktop
